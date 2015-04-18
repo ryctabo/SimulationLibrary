@@ -1,0 +1,69 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.ryctabo.random;
+
+/**
+ *
+ * @author Gustavo Pacheco Gómez
+ * @version 1.0
+ */
+public abstract class Congruential extends PseudoRandom {
+
+    protected final int multiplier;
+
+    public Congruential(int multiplier, int module, int seed) {
+        super(module, seed);
+
+        if (multiplier < 0)
+            throw new PseudoRandomException("El multiplicador debe ser mayor o igual a 0.");
+
+        if (multiplier >= module)
+            throw new PseudoRandomException("El multiplicador debe ser menor al modulo.");
+
+        this.multiplier = multiplier;
+    }
+
+    public int getMultiplier() {
+        return multiplier;
+    }
+
+    @Override
+    public boolean isOptimum() {
+        if (!super.isOptimum())
+            return false;
+        
+        int[] primeModule = com.ryctabo.util.Math.getPrimeFactors(module);
+        for (int i = 0; i < primeModule.length - 1; i++)
+            if ((multiplier - 1) % primeModule[i] != 0)
+                return false;
+
+        return !(module % 4 == 0 & (multiplier - 1) % 4 != 0);
+    }
+
+    @Override
+    public String getSuggestions() {
+        if (isOptimum()) {
+            return "<html>No hay sugerencias, los parametros son optimos.";
+        } else {
+            String suggestion = super.getSuggestions();
+
+            int[] primeModule = com.ryctabo.util.Math.getPrimeFactors(module);
+            for (int i = 0; i < primeModule.length - 1; i++)
+                if ((multiplier - 1) % primeModule[i] != 0) {
+                    System.out.println("" + primeModule[i]);
+                    suggestion += "<li>El multiplicador[a] sea múltiplo de los factores primos del modulo[m];"
+                            + "<br>a-1=k(P1*P2 *....*Pr), siendo Pi factor primo del modulo[m].</li>";
+                    break;
+                }
+
+            if (module % 4 == 0 & (multiplier - 1) % 4 != 0)
+                suggestion += "<li>Si el modulo[m] es múltiplo de 4, El multiplicador menos uno [a-1]"
+                        + "<br>también debe serlo (si m=k4 => a-1=k’4).</li>";
+
+            return suggestion;
+        }
+    }
+}
