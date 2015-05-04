@@ -184,33 +184,32 @@ public class Math {
     }
     
     /**
+     * Este método te devuelve el promedio de los parametros dados.
      * 
-     * @param values
-     * @return 
+     * @param values lista de valores dados.
+     * @return -1 si hubo algún problema dentro de la operación.
      */
     public static double prom(double... values) {
         if (values != null) {
             double sum = sum(values);
             double prom = sum / values.length;
-            
             return prom;
         }
         return -1d;
     }
     
     /**
+     * Este método te devuelve la suma de los parametros dados.
      * 
-     * @param values
-     * @return 
+     * @param values lista de parametros
+     * @return -1, si hubo algún problema dentro de la operación
      */
     public static double sum(double... values) {
         if (values != null) {
             double sum = 0;
-            
             for (double item : values) {
                 sum+=item;
             }
-            
             return sum;
         }
         return -1d;
